@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+    <style>
+        body {
+            background-color: rgb(201, 228, 201);
+            height: 100vh;
+        }
+
+        label {
+            display: inline-flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 5%;
+        }
+
+        input,
+        textarea {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid gray;
+        }
+
+        input.error,
+        textarea.error {
+            border-color: red;
+        }
+
+        #squery1,
+        #squery2 {
+            border-radius: 5px;
+            margin: 12px;
+            border: 1px solid gray;
+            display: inline-flex;
+        }
+
+        #contact {
+            padding: 20px;
+            background-color: white;
+            border-radius: 20px;
+        }
+
+        #submitbtn input[type="submit"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid gray;
+            background-color: rgba(1, 96, 82, 0.765);
+            color: white;
+        }
+
+        .astigalign {
+            color: green;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: -20px;
+            margin-left: 5px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        #popup {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        textarea#message {
+            width: 100%;
+            height: 20vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="popup">Thanks for submitting the form!</div>
+    <main>
+        <div id="contact">
+            <form id="contactForm" action="/submit" method="post">
+                <h1>Contact Us</h1>
+                <div id="nameid">
+                    <span id="sfirstname">
+                        <label for="firstname"><span>First Name <span class="astigalign">*</span></span>
+                            <input type="text" id="firstname" name="firstname" >
+                            <span class="error-message" id="fnameError">This field is required</span>
+                        </label>
+                    </span>
+                    <span id="slastname">
+                        <label for="lastname"><span>Last Name <span class="astigalign">*</span></span>
+                            <input type="text" id="lastname" name="lastname" >
+                            <span class="error-message" id="lnameError">This field is required</span>
+                        </label>
+                    </span>
+                </div>
+                <div id="emailid">
+                    <span id="semail">
+                        <label for="email" style="width: 90%;"><span>Email Address <span
+                                    class="astigalign">*</span></span>
+                            <input type="email" id="email" name="email" >
+                            <span class="error-message" id="emailError">Please enter a valid email</span>
+                        </label>
+                    </span>
+                </div>
+                <div id="queryid1">
+                    <span>Query Type <span class="astigalign">*</span></span>
+                    <div id="queryid2">
+                        <span id="squery1">
+                            <label for="radio1" style="flex-direction: row-reverse;">General Enquiry
+                                <input id="radio1" type="radio" name="queryType" value="General Enquiry">
+                            </label>
+                        </span>
+                        <span id="squery2">
+                            <label for="radio2" style="flex-direction: row-reverse;">Support Request
+                                <input id="radio2" type="radio" name="queryType" value="Support Request">
+                            </label>
+                        </span>
+                        <span class="error-message" id="queryError">This field is required</span>
+                    </div>
+                </div>
+                <div id="messageid">
+                    <span id="smessage">
+                        <label for="message" style="flex-direction: row;">Message<span
+                                class="astigalign">*</span></label>
+                        <textarea id="message" name="message" ></textarea>
+                        <span class="error-message" id="messageError">This field is required</span>
+                    </span>
+                </div>
+                <div id="checkbox">
+                    <span id="scheckbox">
+                        <label for="checkbox" style="flex-direction: row;">
+                            <input type="checkbox" id="checkbox" name="consent">I consent to being contacted by the team
+                        </label>
+                    </span>
+                </div>
+                <div id="submitbtn">
+                    <span id="ssubmit">
+                        <label for="submit" style="width: 100%;">
+                            <input type="submit">
+                        </label>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('contactForm');
+            const fnameInput = document.getElementById('firstname');
+            const lnameInput = document.getElementById('lastname');
+            const emailInput = document.getElementById('email');
+            const queryInputs = document.getElementsByName('queryType');
+            const messageInput = document.getElementById('message');
+
+            const fnameError = document.getElementById('fnameError');
+            const lnameError = document.getElementById('lnameError');
+            const emailError = document.getElementById('emailError');
+            const queryError = document.getElementById('queryError');
+            const messageError = document.getElementById('messageError');
+
+
+
+            const validateName = (input, error) => {
+                if (!input.value.trim()) {
+                    input.classList.add('error');
+                    error.style.display = 'block';
+                }
+                else {
+                    input.classList.remove('error');
+                    error.style.display = 'none';
+                }
+            };
+            const hideError = (input, error) => {
+                input.addEventListener('focus', () => {
+                    input.classList.remove('error');
+                    error.style.display = 'none';
+                });
+            };
+            hideError(fnameInput, fnameError);
+            hideError(lnameInput, lnameError);
+            hideError(emailInput, emailError);
+            hideError(messageInput, messageError);
+
+            const validateEmail = () => {
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(emailInput.value.trim())) {
+                    emailInput.classList.add('error');
+                    emailError.style.display = 'block';
+                } else {
+                    emailInput.classList.remove('error');
+                    emailError.style.display = 'none';
+                }
+            };
+
+            const validateQuery = () => {
+                let isChecked = false;
+                for (let i = 0; i < queryInputs.length; i++) {
+                    if (queryInputs[i].checked) {
+                        isChecked = true;
+                        break;
+                    }
+                }
+                if (!isChecked) {
+                    queryError.style.display = 'block';
+                } else {
+                    queryError.style.display = 'none';
+                }
+            };
+
+            const validateMessage = () => {
+                if (!messageInput.value.trim()) {
+                    messageInput.classList.add('error');
+                    messageError.style.display = 'block';
+                } else {
+                    messageInput.classList.remove('error');
+                    messageError.style.display = 'none';
+                }
+            };
+
+            fnameInput.addEventListener('blur', () => validateName(fnameInput, fnameError));
+            lnameInput.addEventListener('blur', () => validateName(lnameInput, lnameError));
+            emailInput.addEventListener('blur', validateEmail);
+            messageInput.addEventListener('blur', validateMessage);
+
+            form.addEventListener('submit', (event) => {
+                validateName(fnameInput, fnameError);
+                validateName(lnameInput, lnameError);
+                validateEmail();
+                validateQuery();
+                validateMessage();
+
+                if (form.querySelector('.error') || queryError.style.display === 'block') {
+                    event.preventDefault();
+                } else {
+                    const popup = document.getElementById('popup');
+                    popup.style.display = 'block';
+                    setTimeout(() => {
+                        popup.style.display = 'none';
+                    }, 3000);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
